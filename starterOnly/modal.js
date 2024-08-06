@@ -14,13 +14,11 @@ const location1 = document.querySelector("#location1");
 const form = document.querySelector("#registerForm");
 const modalConfirmation = document.querySelector(".modalConfirmation");
 const fermerConfirmationButton = document.querySelector(".btn-close");
-const hmbgMenu = document.querySelector(".fa.fa-bars")
-const mainNavbar = document.querySelector(".main-navbar")
-
+const hmbgMenu = document.querySelector(".fa.fa-bars");
+const mainNavbar = document.querySelector(".main-navbar");
 
 // Evenement qui lance la modal
 modalButtons.forEach((btn) => btn.addEventListener("click", launchModal));
-
 
 // Fermer le fomulaire de la modal
 fermerModalBtn.addEventListener("click", closeModal);
@@ -39,16 +37,55 @@ form.addEventListener("submit", function (event) {
 });
 
 // Ajouter un background blanc au menu hamburger quand on clique dessus
-hmbgMenu.addEventListener("click", function(){
+hmbgMenu.addEventListener("click", function () {
   mainNavbar.classList.toggle("add-white-bg");
-})
+});
+
+// Règle de validation : si le champs prénom contient moins de 2 caractère, empecher la soumission du formulaire
+prenomInput.addEventListener("input", (event) => {
+  if (prenomInput.value.length < 2) {
+    prenomInput.setCustomValidity(
+      "Veuillez entrer 2 caractères ou plus pour le champ du prénom."
+    );
+  } else {
+    prenomInput.setCustomValidity("");
+    event.preventDefault();
+  }
+});
+
+// Règle de validation : si le champs nom contient moins de 2 caractère, empecher la soumission du formulaire
+nomInput.addEventListener("input", (event) => {
+  if (nomInput.value.length < 2) {
+    nomInput.setCustomValidity(
+      "Veuillez entrer 2 caractères ou plus pour le champ du prénom."
+    );
+  } else {
+    nomInput.setCustomValidity("");
+    event.preventDefault;
+  }
+});
+
+// Règle de validation : si le champs email ne respect pas la regexp, empecher la soumission du formulaire
+emailInput.addEventListener('input', () => {
+  if (!validEmail(emailInput.value)) {
+    flashErrorMessage(emailInput, "Veuillez entrer une adresse mail valide.");
+  } else {
+    removeErrorMessages();
+  }
+});
 
 // Verifications de la validité des inputs
 prenomInput.addEventListener("invalid", (event) =>
-  flashErrorMessage(event, "Veuillez entrer 2 caractères ou plus pour le champ du prénom.")
+  flashErrorMessage(
+    event,
+    "Veuillez entrer 2 caractères ou plus pour le champ du prénom."
+  )
 );
 nomInput.addEventListener("invalid", (event) =>
-  flashErrorMessage(event, "Veuillez entrer 2 caractères ou plus pour le champ du nom.")
+  flashErrorMessage(
+    event,
+    "Veuillez entrer 2 caractères ou plus pour le champ du nom."
+  )
 );
 emailInput.addEventListener("invalid", (event) =>
   flashErrorMessage(event, "Veuillez entrer une adresse mail valide.")
@@ -111,3 +148,38 @@ function editNav() {
   const topNavBar = document.getElementById("myTopnav");
   topNavBar.classList.toggle("responsive");
 }
+
+// Function to validate first name
+const validerPrenom = function (prenomInput) {
+  if (prenomInput.value.length < 2) {
+    flashErrorMessage(
+      { target: prenomInput },
+      "Veuillez entrer 2 caractères ou plus pour le champ du prénom."
+    );
+    return false;
+  } else {
+    removeErrorMessages(prenomInput);
+    return true;
+  }
+};
+
+// Function to validate last name
+const validLast = function (inputLast) {
+  if (inputLast.value.length < 2) {
+    flashErrorMessage(
+      { target: inputLast },
+      "Veuillez entrer 2 caractères ou plus pour le champ du nom."
+    );
+    return false;
+  } else {
+    removeErrorMessages(inputLast);
+    return true;
+  }
+};
+// Function to validate email format
+const validEmail = function (inputEmail) {
+  let emailRegExp = new RegExp(
+    "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+  );
+  return emailRegExp.test(inputEmail);
+};
